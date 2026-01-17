@@ -1,14 +1,32 @@
 [package]
-name = "hr-monitor"
-version = "0.2.0"
+name = "hr-view"
+version = "0.1.0"
 edition = "2024"
-authors = ["kanggui <kg.he@outlook.com>"]
+
+[profile.release]
+opt-level = "z"
+lto = "fat"
+strip = true
+panic = "abort"
 
 [dependencies]
-tokio = { version = "1", features = ["full"] }
-tokio-stream = "0.1"
-bluest = "0.6"
-clap = { version = "4", features = ["derive"] }
-anyhow = "1.0"
-camino = "1"
+btleplug = "0.11.8"
+iced_aw = { version = "0.13.0", default-features = false, features = ["labeled_frame", "selection_list"] }
+log = "0.4.29"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+uuid = "1.20.0"
+
+[dependencies.iced]
+version = "0.14.0"
+default-features = false
+features = [
+  "tiny-skia",
+  "crisp",
+  "web-colors",
+  "thread-pool",
+  "linux-theme-detection",
+  "x11",
+  "wayland",
+]
 
