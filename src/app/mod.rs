@@ -64,6 +64,9 @@ pub struct App {
 }
 
 impl App {
+    pub fn theme(&self, id: window::Id) -> Option<iced::Theme> {
+        (id == self.main_window).then_some(iced::Theme::CatppuccinMacchiato)
+    }
     /// Get last error message, if the last error is more than 5 seconds now, this message will be
     /// considered expired and this function will return `None`.
     fn error_message(&self) -> Option<&str> {
