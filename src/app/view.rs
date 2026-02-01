@@ -37,6 +37,7 @@ impl App {
 
         let mut right_pane = Column::new()
             .height(Length::Fill)
+            .width(Length::Fixed(250.0))
             .spacing(4)
             .push(self.settings_view());
 
