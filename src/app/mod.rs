@@ -34,7 +34,6 @@ pub enum Message {
     ConnectDevice,
     DisconnectDevice,
     ShowHeartRateWindow(bool),
-    ToggleAutoReconnect(bool),
     LockHeartRateWindow(bool),
     MouseEvent(iced::mouse::Event, window::Id),
 
