@@ -5,9 +5,11 @@ edition = "2024"
 
 [profile.release]
 opt-level = "z"
-lto = "fat"
-strip = true
-panic = "abort"
+lto = true
+strip = "debuginfo"
+codegen-units = 1
+debug = false
+overflow-checks = false
 
 [dependencies]
 btleplug = "0.11.8"
