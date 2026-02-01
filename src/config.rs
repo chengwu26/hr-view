@@ -9,7 +9,6 @@ pub struct Config {
     pub hr_window_scale: f32,
     pub hr_window_visible: bool,
     pub hr_window_locked: bool,
-    pub automatic_reconnection: bool,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
@@ -18,7 +17,6 @@ struct ConfigSerdeable {
     pub hr_window_scale: f32,
     pub hr_window_visible: bool,
     pub hr_window_locked: bool,
-    pub automatic_reconnection: bool,
 }
 
 fn config_path() -> PathBuf {
@@ -80,7 +78,6 @@ impl Default for Config {
             hr_window_scale: 0.7,
             hr_window_visible: true,
             hr_window_locked: false,
-            automatic_reconnection: false,
         }
     }
 }
@@ -92,7 +89,6 @@ impl From<ConfigSerdeable> for Config {
             hr_window_scale: value.hr_window_scale,
             hr_window_visible: value.hr_window_visible,
             hr_window_locked: value.hr_window_locked,
-            automatic_reconnection: value.automatic_reconnection,
         }
     }
 }
@@ -104,7 +100,6 @@ impl From<Config> for ConfigSerdeable {
             hr_window_scale: value.hr_window_scale,
             hr_window_visible: value.hr_window_visible,
             hr_window_locked: value.hr_window_locked,
-            automatic_reconnection: value.automatic_reconnection,
         }
     }
 }

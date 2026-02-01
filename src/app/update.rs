@@ -70,10 +70,6 @@ impl App {
                     }),
                 )
             }
-            ToggleAutoReconnect(enable) => {
-                self.config.automatic_reconnection = enable;
-                Task::none()
-            }
             LockHeartRateWindow(enable) => {
                 self.config.hr_window_locked = enable;
                 if enable {

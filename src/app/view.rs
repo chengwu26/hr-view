@@ -115,9 +115,6 @@ impl App {
         let hear_rate_window = toggler(self.config.hr_window_visible)
             .label("Heart rate window")
             .on_toggle(Message::ShowHeartRateWindow);
-        // let auto_reconnect = toggler(self.config.automatic_reconnection)
-        //     .label("Automatic reconnection")
-        //     .on_toggle(Message::ToggleAutoReconnect);
         let lock_heart_rate_window = toggler(self.config.hr_window_locked)
             .label("Lock heart rate window")
             .on_toggle(Message::LockHeartRateWindow);
@@ -125,7 +122,6 @@ impl App {
         let settings = Column::new()
             .spacing(4)
             .push(hear_rate_window)
-            // .push(auto_reconnect)
             .push(lock_heart_rate_window);
         labeled_frame::LabeledFrame::new("Settings", settings)
             .height(Length::Fill)
