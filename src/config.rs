@@ -7,8 +7,8 @@ use crate::locales::Language;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Config {
+    hr_window_scale: f32,
     pub hr_window_pos: iced::Point,
-    pub hr_window_scale: f32,
     pub hr_window_visible: bool,
     pub hr_window_locked: bool,
     pub lang: Language,
@@ -55,16 +55,17 @@ fn config_path() -> PathBuf {
 }
 
 impl Config {
-    pub const DEFAULT_SIZE: iced::Size = iced::Size {
+    const DEFAULT_SIZE: iced::Size = iced::Size {
         width: 170.0,
         height: 70.0,
     };
+
     pub fn load() -> Option<Self> {
         let config = std::fs::read_to_string(config_path()).ok()?;
         let mut config = serde_json::from_str::<ConfigSerdeable>(&config)
             .ok()
             .map(Config::from)?;
-        config.hr_window_scale = config.hr_window_scale.clamp(0.5, 5.0);
+        config.set_hr_window_scale(config.hr_window_scale);
         Some(config)
     }
 
@@ -72,6 +73,19 @@ impl Config {
         if let Ok(config) = serde_json::to_string(&ConfigSerdeable::from(*self)) {
             let _ = std::fs::write(config_path(), config);
         }
+    }
+
+    pub fn hr_window_scale(&self) -> f32 {
+        self.hr_window_scale
+    }
+
+    pub fn set_hr_window_scale(&mut self, value: f32) -> f32 {
+        self.hr_window_scale = value.clamp(0.5, 5.0);
+        self.hr_window_scale
+    }
+
+    pub fn hr_window_size(&self) -> iced::Size {
+        Self::DEFAULT_SIZE * self.hr_window_scale
     }
 }
 

@@ -2,8 +2,6 @@ use btleplug::api::CentralState;
 use iced::{Task, window};
 use log::{debug, warn};
 
-use crate::config::Config;
-
 use super::{App, BlockResize, ConnectionState, Message};
 use Message::*;
 
@@ -36,12 +34,12 @@ impl App {
             }
             HeartRateWindowResize(resize) => {
                 let id = self.hr_window;
-                match resize {
-                    BlockResize::Increment => self.config.hr_window_scale += 0.1,
-                    BlockResize::Decrease => self.config.hr_window_scale -= 0.1,
-                }
-                self.config.hr_window_scale = self.config.hr_window_scale.clamp(0.5, 5.0);
-                window::resize(id, Config::DEFAULT_SIZE * self.config.hr_window_scale)
+                let new_scale = match resize {
+                    BlockResize::Increment => self.config.hr_window_scale() + 0.1,
+                    BlockResize::Decrease => self.config.hr_window_scale() - 0.1,
+                };
+                self.config.set_hr_window_scale(new_scale);
+                window::resize(id, self.config.hr_window_size())
             }
             Exit => {
                 let mut config = self.config;
