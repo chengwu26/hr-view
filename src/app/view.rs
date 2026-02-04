@@ -158,6 +158,7 @@ impl App {
         .text_size(15);
         let settings = Column::new()
             .spacing(4)
+            .padding(4)
             .push(language)
             .push(space().height(5))
             .push(hear_rate_window)
