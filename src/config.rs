@@ -56,8 +56,8 @@ fn config_path() -> PathBuf {
 
 impl Config {
     const DEFAULT_SIZE: iced::Size = iced::Size {
-        width: 170.0,
-        height: 70.0,
+        width: 120.0,
+        height: 50.0,
     };
 
     pub fn load() -> Option<Self> {
@@ -93,7 +93,7 @@ impl Default for Config {
     fn default() -> Self {
         Config {
             hr_window_pos: iced::Point::ORIGIN,
-            hr_window_scale: 0.7,
+            hr_window_scale: 1.0,
             hr_window_visible: true,
             hr_window_locked: false,
             lang: sys_locale::get_locale()
