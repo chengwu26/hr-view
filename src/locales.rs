@@ -14,7 +14,7 @@ pub enum Language {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TranslateItem {
     UnknownAdapterState,
-    AdapterPowedOff,
+    AdapterPowereddOff,
     ScanTitle,
     ConnectedTitle,
     ConnectButton,
@@ -60,9 +60,9 @@ fn translate(lang: Language, key: TranslateItem) -> &'static str {
     use TranslateItem::*;
     match (lang, key) {
         (English, UnknownAdapterState) => "Unknown Bluetooth adapter state\nI CANNOT WORK!",
-        (English, AdapterPowedOff) => "Please turn on your Bluetooth adapter!",
+        (English, AdapterPowereddOff) => "Please turn on your Bluetooth adapter!",
         (English, ScanTitle) => "Discoverd devices",
-        (English, ConnectedTitle) => "Connected",
+        (English, ConnectedTitle) => "Connected:",
         (English, ConnectButton) => "Connect",
         (English, ConnectingButton) => "Connecting",
         (English, DisconnectButton) => "Disconnect",
@@ -71,9 +71,9 @@ fn translate(lang: Language, key: TranslateItem) -> &'static str {
         (English, LockHeartRateWindowSetting) => "Lock heart rate window",
 
         (Chinese, UnknownAdapterState) => "蓝牙状态未知，无法继续",
-        (Chinese, AdapterPowedOff) => "不是，哥们儿！把蓝牙给开开！",
+        (Chinese, AdapterPowereddOff) => "不是，哥们儿！把蓝牙给开开！",
         (Chinese, ScanTitle) => "扫描到的设备",
-        (Chinese, ConnectedTitle) => "连接到",
+        (Chinese, ConnectedTitle) => "连接到：",
         (Chinese, ConnectButton) => "连接",
         (Chinese, ConnectingButton) => "正在连接",
         (Chinese, DisconnectButton) => "断开设备",
