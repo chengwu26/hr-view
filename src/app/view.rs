@@ -29,7 +29,7 @@ impl App {
                 adapter_message(TranslateItem::UnknownAdapterState, self.config.lang).into()
             }
             (CentralState::PoweredOff, true) => {
-                adapter_message(TranslateItem::AdapterPowedOff, self.config.lang).into()
+                adapter_message(TranslateItem::AdapterPowereddOff, self.config.lang).into()
             }
             (CentralState::Unknown | CentralState::PoweredOff, false) => center("N/A")
                 .style(|theme| {
@@ -109,7 +109,7 @@ impl App {
         Column::new()
             .spacing(4)
             .push(text!(
-                "{}: {}",
+                "{} {}",
                 TranslateItem::ConnectedTitle.translate(self.config.lang),
                 self.connected_device()
                     .expect("[BUG] No device connected, but attempt display heart rate infomation")
@@ -162,6 +162,7 @@ impl App {
             .push(space().height(5))
             .push(hear_rate_window)
             .push(lock_heart_rate_window);
+
         labeled_frame::LabeledFrame::new(
             TranslateItem::SettingsTitle.translate(self.config.lang),
             settings,
