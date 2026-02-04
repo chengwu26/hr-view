@@ -47,6 +47,7 @@ impl App {
                 selected_device: None,
                 heart_rate: None,
                 last_error: (String::new(), Instant::now() - iced::time::seconds(5)),
+
                 config,
             },
             Task::batch([
@@ -105,7 +106,7 @@ fn create_hr_window(config: &Config) -> (window::Id, Task<Message>) {
         ..Default::default()
     };
     let (id, open) = window::open(window::Settings {
-        size: Config::DEFAULT_SIZE * config.hr_window_scale,
+        size: config.hr_window_size(),
         position: window::Position::Specific(config.hr_window_pos),
         visible: config.hr_window_visible,
         transparent: true,
