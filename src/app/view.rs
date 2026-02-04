@@ -2,22 +2,25 @@ use btleplug::api::CentralState;
 use iced::border::rounded;
 use iced::widget::container::rounded_box;
 use iced::widget::{
-    Column, button, center, container, responsive, right_center, row, rule, space, text, toggler,
-    value,
+    Column, button, center, container, pick_list, responsive, right_center, row, rule, space, text,
+    toggler, value,
 };
 use iced::{Element, Length, window};
 use iced_aw::widget::{labeled_frame, selection_list_with};
 
 use super::{App, ConnectionState, Message};
+use crate::locales::TranslateItem;
 
 impl App {
     pub fn view(&self, id: window::Id) -> Element<'_, Message> {
         match (self.adapter_state.clone(), id == self.main_window) {
-            (CentralState::Unknown, true) => {
-                center(text("Unknown Bluetooth adapter state\nI CANNOT WORK!").size(30)).into()
-            }
+            (CentralState::Unknown, true) => center(
+                text(TranslateItem::UnknownAdapterState.translate(self.config.lang)).size(30),
+            )
+            .into(),
             (CentralState::PoweredOff, true) => {
-                center(text("Please turn on your Bluetooth adapter!").size(30)).into()
+                center(text(TranslateItem::AdapterPowedOff.translate(self.config.lang)).size(30))
+                    .into()
             }
             (CentralState::Unknown | CentralState::PoweredOff, false) => center("N/A").into(),
             (CentralState::PoweredOn, true) => self.main_window_view(),
@@ -68,10 +71,13 @@ impl App {
             Default::default(),
         );
 
-        labeled_frame::LabeledFrame::new("Discovered devices", devices)
-            .height(Length::Fill)
-            .stroke_width(1)
-            .into()
+        labeled_frame::LabeledFrame::new(
+            TranslateItem::ScanTitle.translate(self.config.lang),
+            devices,
+        )
+        .height(Length::Fill)
+        .stroke_width(1)
+        .into()
     }
 
     fn hrm_info_view(&self) -> Element<'_, Message> {
@@ -82,10 +88,12 @@ impl App {
             }
             .wrapping(text::Wrapping::None),
         );
+
         Column::new()
             .spacing(4)
             .push(text!(
-                "Connected: {}",
+                "{}: {}",
+                TranslateItem::ConnectedTitle.translate(self.config.lang),
                 self.connected_device()
                     .expect("[BUG] No device connected, but attempt display heart rate infomation")
             ))
@@ -96,14 +104,19 @@ impl App {
 
     fn toggle_connect_btn_view(&self) -> Element<'_, Message> {
         let btn = match self.connection_state {
-            ConnectionState::NotConnected => button("Connect").on_press_maybe(
-                self.selected_device
-                    .as_ref()
-                    .and(Some(Message::ConnectDevice)),
-            ),
-            ConnectionState::Connecting => button("Connecting"),
+            ConnectionState::NotConnected => {
+                button(TranslateItem::ConnectButton.translate(self.config.lang)).on_press_maybe(
+                    self.selected_device
+                        .as_ref()
+                        .and(Some(Message::ConnectDevice)),
+                )
+            }
+            ConnectionState::Connecting => {
+                button(TranslateItem::ConnectingButton.translate(self.config.lang))
+            }
             ConnectionState::Connected(_) => {
-                button("Disconnect").on_press(Message::DisconnectDevice)
+                button(TranslateItem::DisconnectButton.translate(self.config.lang))
+                    .on_press(Message::DisconnectDevice)
             }
         };
         right_center(row![btn, space().width(Length::Fixed(4.0))])
@@ -113,21 +126,33 @@ impl App {
 
     fn settings_view(&self) -> Element<'_, Message> {
         let hear_rate_window = toggler(self.config.hr_window_visible)
-            .label("Heart rate window")
+            .label(TranslateItem::ShowHeartRateWindowSetting.translate(self.config.lang))
+            .text_size(15)
             .on_toggle(Message::ShowHeartRateWindow);
         let lock_heart_rate_window = toggler(self.config.hr_window_locked)
-            .label("Lock heart rate window")
+            .label(TranslateItem::LockHeartRateWindowSetting.translate(self.config.lang))
+            .text_size(15)
             .on_toggle(Message::LockHeartRateWindow);
-
+        let language = pick_list(
+            crate::locales::Language::ALL,
+            Some(self.config.lang),
+            Message::LanguageChanged,
+        )
+        .text_size(15);
         let settings = Column::new()
             .spacing(4)
+            .push(language)
+            .push(space().height(5))
             .push(hear_rate_window)
             .push(lock_heart_rate_window);
-        labeled_frame::LabeledFrame::new("Settings", settings)
-            .height(Length::Fill)
-            .width(Length::FillPortion(3))
-            .stroke_width(1)
-            .into()
+        labeled_frame::LabeledFrame::new(
+            TranslateItem::SettingsTitle.translate(self.config.lang),
+            settings,
+        )
+        .height(Length::Fill)
+        .width(Length::FillPortion(3))
+        .stroke_width(1)
+        .into()
     }
 
     fn heart_rate_window_view(&self) -> Element<'_, Message> {

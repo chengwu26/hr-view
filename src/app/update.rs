@@ -11,6 +11,10 @@ impl App {
     pub fn update(&mut self, message: Message) -> Task<Message> {
         debug!("Received message: {message:?}");
         match message {
+            LanguageChanged(lang) => {
+                self.config.lang = lang;
+                Task::none()
+            }
             MouseEvent(event, id) => {
                 use iced::mouse::{Button, Event, ScrollDelta};
                 if id == self.main_window {
