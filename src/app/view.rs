@@ -2,33 +2,55 @@ use btleplug::api::CentralState;
 use iced::border::rounded;
 use iced::widget::container::rounded_box;
 use iced::widget::{
-    Column, button, center, container, pick_list, responsive, right_center, row, rule, space, text,
-    toggler, value,
+    Column, Container, button, center, container, pick_list, responsive, right_center, row, rule,
+    space, text, toggler, value,
 };
 use iced::{Element, Length, window};
 use iced_aw::widget::{labeled_frame, selection_list_with};
 
 use super::{App, ConnectionState, Message};
-use crate::locales::TranslateItem;
+use crate::locales::{Language, TranslateItem};
+
+fn themed_container<'a, E: Into<iced::Element<'a, Message>>>(content: E) -> Container<'a, Message> {
+    center(content).style(|theme: &iced::Theme| iced::widget::container::Style {
+        background: Some(iced::Background::Color(theme.palette().background)),
+        ..Default::default()
+    })
+}
+
+fn adapter_message<'a>(item: TranslateItem, lang: Language) -> Container<'a, Message> {
+    themed_container(text(item.translate(lang)).size(30))
+}
 
 impl App {
     pub fn view(&self, id: window::Id) -> Element<'_, Message> {
         match (self.adapter_state.clone(), id == self.main_window) {
-            (CentralState::Unknown, true) => center(
-                text(TranslateItem::UnknownAdapterState.translate(self.config.lang)).size(30),
-            )
-            .into(),
-            (CentralState::PoweredOff, true) => {
-                center(text(TranslateItem::AdapterPowedOff.translate(self.config.lang)).size(30))
-                    .into()
+            (CentralState::Unknown, true) => {
+                adapter_message(TranslateItem::UnknownAdapterState, self.config.lang).into()
             }
-            (CentralState::Unknown | CentralState::PoweredOff, false) => center("N/A").into(),
-            (CentralState::PoweredOn, true) => self.main_window_view(),
+            (CentralState::PoweredOff, true) => {
+                adapter_message(TranslateItem::AdapterPowedOff, self.config.lang).into()
+            }
+            (CentralState::Unknown | CentralState::PoweredOff, false) => center("N/A")
+                .style(|theme| {
+                    let mut style = rounded_box(theme);
+                    style.border = rounded(self.config.hr_window_size().height / 2.0);
+                    style.background = Some(
+                        iced::Color {
+                            a: 0.5,
+                            ..iced::Color::BLACK
+                        }
+                        .into(),
+                    );
+                    style
+                })
+                .into(),
+            (CentralState::PoweredOn, true) => themed_container(self.main_window_view()).into(),
             (CentralState::PoweredOn, false) => self.heart_rate_window_view(),
         }
     }
 
-    fn main_window_view(&self) -> Element<'_, Message> {
+    fn main_window_view(&self) -> Container<'_, Message> {
         let left_pane = Column::new()
             .width(Length::FillPortion(3))
             .spacing(4)
@@ -49,11 +71,6 @@ impl App {
         }
 
         container(row![left_pane, rule::vertical(1), right_pane].padding(8))
-            .style(|theme: &iced::Theme| iced::widget::container::Style {
-                background: Some(iced::Background::Color(theme.palette().background)),
-                ..Default::default()
-            })
-            .into()
     }
 
     fn devices_view(&self) -> Element<'_, Message> {
