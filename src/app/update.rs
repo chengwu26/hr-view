@@ -35,8 +35,8 @@ impl App {
             HeartRateWindowResize(resize) => {
                 let id = self.hr_window;
                 let new_scale = match resize {
-                    BlockResize::Increment => self.config.hr_window_scale() + 0.1,
-                    BlockResize::Decrease => self.config.hr_window_scale() - 0.1,
+                    BlockResize::Increment => self.config.hr_window_scale() + 0.05,
+                    BlockResize::Decrease => self.config.hr_window_scale() - 0.05,
                 };
                 self.config.set_hr_window_scale(new_scale);
                 window::resize(id, self.config.hr_window_size())
