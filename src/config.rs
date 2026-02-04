@@ -3,12 +3,15 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
+use crate::locales::Language;
+
 #[derive(Debug, Clone, Copy)]
 pub struct Config {
     pub hr_window_pos: iced::Point,
     pub hr_window_scale: f32,
     pub hr_window_visible: bool,
     pub hr_window_locked: bool,
+    pub lang: Language,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
@@ -17,6 +20,7 @@ struct ConfigSerdeable {
     pub hr_window_scale: f32,
     pub hr_window_visible: bool,
     pub hr_window_locked: bool,
+    pub lang: Language,
 }
 
 fn config_path() -> PathBuf {
@@ -78,6 +82,9 @@ impl Default for Config {
             hr_window_scale: 0.7,
             hr_window_visible: true,
             hr_window_locked: false,
+            lang: sys_locale::get_locale()
+                .map(|v| Language::from(v.as_str()))
+                .unwrap_or_default(),
         }
     }
 }
@@ -89,6 +96,7 @@ impl From<ConfigSerdeable> for Config {
             hr_window_scale: value.hr_window_scale,
             hr_window_visible: value.hr_window_visible,
             hr_window_locked: value.hr_window_locked,
+            lang: value.lang,
         }
     }
 }
@@ -100,6 +108,7 @@ impl From<Config> for ConfigSerdeable {
             hr_window_scale: value.hr_window_scale,
             hr_window_visible: value.hr_window_visible,
             hr_window_locked: value.hr_window_locked,
+            lang: value.lang,
         }
     }
 }

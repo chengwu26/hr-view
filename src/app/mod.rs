@@ -12,6 +12,7 @@ use iced::window;
 use crate::config::Config;
 use crate::hrm::HeartRateMeasurement;
 use crate::hrs_device::HrsDevice;
+use crate::locales::Language;
 
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub enum ConnectionState {
@@ -36,6 +37,7 @@ pub enum Message {
     ShowHeartRateWindow(bool),
     LockHeartRateWindow(bool),
     MouseEvent(iced::mouse::Event, window::Id),
+    LanguageChanged(Language),
 
     HeartRateWindowResize(BlockResize),
     ScanDevice(bool),
@@ -67,6 +69,7 @@ impl App {
     pub fn theme(&self, id: window::Id) -> Option<iced::Theme> {
         (id == self.main_window).then_some(iced::Theme::CatppuccinMacchiato)
     }
+
     /// Get last error message, if the last error is more than 5 seconds now, this message will be
     /// considered expired and this function will return `None`.
     fn error_message(&self) -> Option<&str> {
