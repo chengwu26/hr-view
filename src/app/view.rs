@@ -166,11 +166,12 @@ impl App {
             Message::LanguageChanged,
         )
         .text_size(15);
+
         let settings = Column::new()
-            .spacing(4)
+            .spacing(6)
             .padding(4)
             .push(language)
-            .push(space().height(5))
+            .push(rule::horizontal(0.5))
             .push(hear_rate_window)
             .push(lock_heart_rate_window)
             .push(hr_window_opaque);
