@@ -1,8 +1,14 @@
-#![windows_subsystem = "windows"]
+#![cfg_attr(
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
+)]
 
 use hr_view::App;
 
 fn main() -> iced::Result {
+    #[cfg(debug_assertions)]
+    env_logger::init();
+
     iced::daemon(App::boot, App::update, App::view)
         .title("Heart Rate View")
         .subscription(App::subscription)
