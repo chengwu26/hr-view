@@ -44,18 +44,15 @@ impl App {
         }
     }
 
-    /// Disconnect connected device.
-    ///
-    /// # Panic
-    /// - no device connected while called this function.
+    /// Disconnect connected device. If no connected device, return Ok.
     pub(crate) fn disconnect(&self) -> impl Future<Output = Result<(), btleplug::Error>> + 'static {
-        let device = self
-            .connected_device()
-            .expect(
-                "[BUG] Not connected any device yet, but received a 'DisconnectDevice' message.",
-            )
-            .clone();
-        async move { device.disconnect().await }
+        let device = self.connected_device().cloned();
+        async move {
+            match device {
+                None => Ok(()),
+                Some(device) => device.disconnect().await,
+            }
+        }
     }
 
     /// Subscribe the _Heart Rate Measurement_ characteristics and return a stream of heart rate
