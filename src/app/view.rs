@@ -142,13 +142,21 @@ impl App {
     }
 
     fn settings_view(&self) -> Element<'_, Message> {
-        let hear_rate_window = toggler(self.config.hr_window_visible)
+        let font_size = 15;
+        let language = pick_list(
+            crate::locales::Language::ALL,
+            Some(self.config.lang),
+            Message::LanguageChanged,
+        )
+        .text_size(font_size);
+
+        let show_hr_window = toggler(self.config.hr_window_visible)
             .label(TranslateItem::ShowHeartRateWindowSetting.translate(self.config.lang))
-            .text_size(15)
+            .text_size(font_size)
             .on_toggle(Message::ShowHeartRateWindow);
-        let lock_heart_rate_window = toggler(self.config.hr_window_locked)
+        let lock_hr_window = toggler(self.config.hr_window_locked)
             .label(TranslateItem::LockHeartRateWindowSetting.translate(self.config.lang))
-            .text_size(15)
+            .text_size(font_size)
             .on_toggle(Message::LockHeartRateWindow);
         let hr_window_opaque = slider(
             0.0..=1.0,
@@ -160,20 +168,14 @@ impl App {
             text(TranslateItem::HeartRateWindowOpaqueSetting.translate(self.config.lang)).size(15),
             hr_window_opaque
         ];
-        let language = pick_list(
-            crate::locales::Language::ALL,
-            Some(self.config.lang),
-            Message::LanguageChanged,
-        )
-        .text_size(15);
 
         let settings = Column::new()
             .spacing(6)
             .padding(4)
             .push(language)
             .push(rule::horizontal(0.5))
-            .push(hear_rate_window)
-            .push(lock_heart_rate_window)
+            .push(show_hr_window)
+            .push(lock_hr_window)
             .push(hr_window_opaque);
 
         labeled_frame::LabeledFrame::new(
