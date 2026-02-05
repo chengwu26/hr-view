@@ -2,8 +2,8 @@ use btleplug::api::CentralState;
 use iced::border::rounded;
 use iced::widget::container::rounded_box;
 use iced::widget::{
-    Column, Container, button, center, container, pick_list, responsive, right_center, row, rule,
-    space, text, toggler, value,
+    Column, Container, button, center, column, container, pick_list, responsive, right_center, row,
+    rule, slider, space, text, toggler, value,
 };
 use iced::{Element, Length, window};
 use iced_aw::widget::{labeled_frame, selection_list_with};
@@ -150,6 +150,16 @@ impl App {
             .label(TranslateItem::LockHeartRateWindowSetting.translate(self.config.lang))
             .text_size(15)
             .on_toggle(Message::LockHeartRateWindow);
+        let hr_window_opaque = slider(
+            0.0..=1.0,
+            self.config.hr_window_opaque,
+            Message::HeartRateWindowOpaqueChanged,
+        )
+        .step(0.01);
+        let hr_window_opaque = column![
+            text(TranslateItem::HeartRateWindowOpaqueSetting.translate(self.config.lang)).size(15),
+            hr_window_opaque
+        ];
         let language = pick_list(
             crate::locales::Language::ALL,
             Some(self.config.lang),
@@ -162,7 +172,8 @@ impl App {
             .push(language)
             .push(space().height(5))
             .push(hear_rate_window)
-            .push(lock_heart_rate_window);
+            .push(lock_heart_rate_window)
+            .push(hr_window_opaque);
 
         labeled_frame::LabeledFrame::new(
             TranslateItem::SettingsTitle.translate(self.config.lang),
@@ -175,7 +186,7 @@ impl App {
     }
 
     fn heart_rate_window_view(&self) -> Element<'_, Message> {
-        responsive(|size| {
+        responsive(move |size| {
             let font_size = size.height / 1.6;
             let icon = text("❤ ").size(font_size);
             let rate = self
@@ -194,7 +205,7 @@ impl App {
                     style.border = rounded(size.height / 2.0);
                     style.background = Some(
                         iced::Color {
-                            a: 0.5,
+                            a: self.config.hr_window_opaque,
                             ..iced::Color::BLACK
                         }
                         .into(),

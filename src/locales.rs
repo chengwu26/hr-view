@@ -23,6 +23,7 @@ pub enum TranslateItem {
     SettingsTitle,
     ShowHeartRateWindowSetting,
     LockHeartRateWindowSetting,
+    HeartRateWindowOpaqueSetting,
 }
 
 impl Language {
@@ -69,6 +70,7 @@ fn translate(lang: Language, key: TranslateItem) -> &'static str {
         (English, SettingsTitle) => "Settings",
         (English, ShowHeartRateWindowSetting) => "Show heart rate window",
         (English, LockHeartRateWindowSetting) => "Lock heart rate window",
+        (English, HeartRateWindowOpaqueSetting) => "Heart rate window opaque:",
 
         (Chinese, UnknownAdapterState) => "蓝牙状态未知，无法继续",
         (Chinese, AdapterPowereddOff) => "不是，哥们儿！把蓝牙给开开！",
@@ -80,5 +82,6 @@ fn translate(lang: Language, key: TranslateItem) -> &'static str {
         (Chinese, SettingsTitle) => "设置",
         (Chinese, ShowHeartRateWindowSetting) => "显示心率窗口",
         (Chinese, LockHeartRateWindowSetting) => "锁定心率窗口",
+        (Chinese, HeartRateWindowOpaqueSetting) => "心率窗口不透明度：",
     }
 }

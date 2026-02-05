@@ -38,6 +38,7 @@ pub enum Message {
     LockHeartRateWindow(bool),
     MouseEvent(iced::mouse::Event, window::Id),
     LanguageChanged(Language),
+    HeartRateWindowOpaqueChanged(f32),
 
     HeartRateWindowResize(BlockResize),
     ScanDevice(bool),
