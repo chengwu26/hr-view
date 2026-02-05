@@ -11,6 +11,7 @@ pub struct Config {
     pub hr_window_pos: iced::Point,
     pub hr_window_visible: bool,
     pub hr_window_locked: bool,
+    pub hr_window_opaque: f32,
     pub lang: Language,
 }
 
@@ -20,6 +21,7 @@ struct ConfigSerdeable {
     pub hr_window_scale: f32,
     pub hr_window_visible: bool,
     pub hr_window_locked: bool,
+    pub hr_window_opaque: f32,
     pub lang: Language,
 }
 
@@ -96,6 +98,7 @@ impl Default for Config {
             hr_window_scale: 1.0,
             hr_window_visible: true,
             hr_window_locked: false,
+            hr_window_opaque: 0.5,
             lang: sys_locale::get_locale()
                 .map(|v| Language::from(v.as_str()))
                 .unwrap_or_default(),
@@ -110,6 +113,7 @@ impl From<ConfigSerdeable> for Config {
             hr_window_scale: value.hr_window_scale,
             hr_window_visible: value.hr_window_visible,
             hr_window_locked: value.hr_window_locked,
+            hr_window_opaque: value.hr_window_opaque.clamp(0.0, 1.0),
             lang: value.lang,
         }
     }
@@ -122,6 +126,7 @@ impl From<Config> for ConfigSerdeable {
             hr_window_scale: value.hr_window_scale,
             hr_window_visible: value.hr_window_visible,
             hr_window_locked: value.hr_window_locked,
+            hr_window_opaque: value.hr_window_opaque,
             lang: value.lang,
         }
     }

@@ -85,6 +85,10 @@ impl App {
                 .and_then(|e| {
                     Task::done(ErrorOccurred(format!("Failed to disconnect device: {e}")))
                 }),
+            HeartRateWindowOpaqueChanged(opaque) => {
+                self.config.hr_window_opaque = opaque;
+                Task::none()
+            }
             AdapterStateUpdated(state) => {
                 self.adapter_state = state;
                 match (&self.adapter_state, &self.connected_device()) {
