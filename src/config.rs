@@ -108,14 +108,16 @@ impl Default for Config {
 
 impl From<ConfigSerdeable> for Config {
     fn from(value: ConfigSerdeable) -> Self {
-        Self {
+        let mut config = Self {
             hr_window_pos: value.hr_window_pos.into(),
-            hr_window_scale: value.hr_window_scale,
             hr_window_visible: value.hr_window_visible,
             hr_window_locked: value.hr_window_locked,
             hr_window_opaque: value.hr_window_opaque.clamp(0.0, 1.0),
             lang: value.lang,
-        }
+            ..Default::default()
+        };
+        config.set_hr_window_scale(value.hr_window_scale);
+        config
     }
 }
 
