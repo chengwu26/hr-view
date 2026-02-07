@@ -136,13 +136,18 @@ impl App {
                         Task::done(ErrorOccurred(format!("Failed to get heart rate data: {e}")))
                             .chain(Task::done(DisconnectDevice))
                     }
-                    Ok(s) => Task::done(ScanDevice(false)).chain(Task::run(s, |opt| match opt {
-                        None => {
-                            warn!("Received invalid heart rate data");
-                            ErrorOccurred("Invalid heart rate data".into())
-                        }
-                        Some(hrm) => HeartRateUpdated(hrm),
-                    })),
+                    Ok(s) => Task::done(ScanDevice(false))
+                        .chain(Task::run(s, |opt| match opt {
+                            None => {
+                                warn!("Received invalid heart rate data");
+                                ErrorOccurred("Invalid heart rate data".into())
+                            }
+                            Some(hrm) => HeartRateUpdated(hrm),
+                        }))
+                        // In some case, the device disconnected, but there is still some data in
+                        // the stream, causing `heart_rate` to not be `None`. Therefor, the
+                        // `DeviceDisconnected` message is sent again after the stream ends.
+                        .chain(Task::done(Message::DeviceDisconnected)),
                 })
             }
             ScanDevice(start) => {
