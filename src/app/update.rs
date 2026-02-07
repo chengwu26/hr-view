@@ -1,4 +1,4 @@
-use btleplug::api::CentralState;
+use btleplug::api::{Central, CentralState};
 use iced::{Task, window};
 use log::{debug, warn};
 
@@ -88,6 +88,34 @@ impl App {
             HeartRateWindowOpaqueChanged(opaque) => {
                 self.config.hr_window_opaque = opaque;
                 Task::none()
+            }
+            CheckState => {
+                let adapter = self.adapter.clone();
+                let adapter_state = self.adapter_state.clone();
+                let connected_device = self.connected_device();
+                let check_adapter_state =
+                    Task::future(async move { adapter.adapter_state().await.ok() }).and_then(
+                        move |state| {
+                            if state != adapter_state {
+                                Task::done(AdapterStateUpdated(state))
+                            } else {
+                                Task::none()
+                            }
+                        },
+                    );
+                let check_connect = match connected_device {
+                    None => Task::none(),
+                    Some(device) => Task::future(device.is_connected())
+                        .map(|res| res.ok())
+                        .and_then(|t| {
+                            if t {
+                                Task::none()
+                            } else {
+                                Task::done(DeviceDisconnected)
+                            }
+                        }),
+                };
+                check_adapter_state.chain(check_connect)
             }
             AdapterStateUpdated(state) => {
                 self.adapter_state = state;

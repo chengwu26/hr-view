@@ -40,6 +40,9 @@ pub enum Message {
     LanguageChanged(Language),
     HeartRateWindowOpaqueChanged(f32),
 
+    /// In certain situations (such as system hibernation), Bluetooth events may not be received
+    /// correctly, requiring periodic checks.
+    CheckState,
     HeartRateWindowResize(BlockResize),
     ScanDevice(bool),
     AdapterStateUpdated(CentralState),

@@ -32,5 +32,5 @@ features = [
   "linux-theme-detection",
   "x11",
   "wayland",
+  "tokio",
 ]
-
