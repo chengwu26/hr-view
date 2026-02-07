@@ -4,4 +4,4 @@ A tool for connect a Bluetooth _Heart Rate Service_ device and display your hear
   been tested, and no pre-built version is provided. Please build it yourself.
 
 ### Demo
-![A demo gif](./assets/demo.gif)
+[Demo](https://github.com/chengwu26/hr-view/issues/1#issue-3909370092)
