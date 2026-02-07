@@ -79,6 +79,11 @@ impl HrsDevice {
             })
             .boxed())
     }
+
+    pub fn is_connected(&self) -> impl Future<Output = btleplug::Result<bool>> + Send + 'static {
+        let device = self.peripheral.clone();
+        async move { device.is_connected().await }
+    }
 }
 
 impl Display for HrsDevice {

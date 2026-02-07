@@ -7,6 +7,7 @@ impl App {
     pub fn subscription(&self) -> Subscription<Message> {
         use iced::mouse;
         Subscription::batch([
+            iced::time::every(iced::time::Duration::from_mins(1)).map(|_| Message::CheckState),
             window::close_events().map(|_| Message::Exit),
             iced::event::listen_with(|event, status, id| {
                 if status == iced::event::Status::Captured {
